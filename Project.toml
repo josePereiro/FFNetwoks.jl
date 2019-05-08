@@ -1,0 +1,10 @@
+name = "FFNetwork"
+uuid = "45ad2715-3a04-5b3b-8402-fbee7960a9b3"
+authors = ["Jose Antonio Pereiro Morejon <jose.pereiro.lab@gmail.com>"]
+version = "0.1.0"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
