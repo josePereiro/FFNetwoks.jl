@@ -27,14 +27,13 @@ function train!(net::Network, train_data::Vector{TestDatum},
         acost::Float64 = 0.0;
         bcost::Float64 = 0.0;
         startime::Float64 = 0.0;
-
     end
+
     for e in 1:epoch
 
         #Info
         if verbose
-            printstyled("Epoch $e"; color = :greev);
-            println();
+            println("###### Epoch $e ###################");
             startime = time();
             if e == 1
                 bcost = cost!(net, test_data);
@@ -66,12 +65,9 @@ function train!(net::Network, train_data::Vector{TestDatum},
         #Evaluate Info
         if verbose
             acost = cost!(net, test_data);
+            # println(net);
             print("Cost After  $acost");
-            if acost - bcost < 0
-                printstyled(" ($(acost - bcost))\n"; color = :blue, bold = true);
-            else
-                printstyled(" ($(acost - bcost))\n"; color = :red, bold = true);
-            end
+            println(" ($(acost - bcost))");
             println("Accuracy $(evaluate!(net,test_data))");
             println("Time $(round(Int,time() - startime)) seconds")
             println();

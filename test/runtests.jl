@@ -3,8 +3,12 @@ using Test
 
 @testset "FFNetwork.jl" begin
 
+    println();
     printstyled("Training with MNIST,\n This could take a few minutes and migth require internet!!!"; color = :green);
     println();
+
+    FFNetwork.loadMNIST();
+    traindata, testdata = FFNetwork.get_MNIST_train_and_test_data();
 
     println();
     println("Train set length: 50000");
@@ -13,40 +17,31 @@ using Test
     println("Test set length: 10000");
     println();
 
-    printstyled("Running 10 epochs "; color = :green, bold = true);
-    printstyled("Blue"; color = :blue, bold = true);
-    printstyled(" is good "; color = :green, bold = true);
-    printstyled("Red"; color = :red, bold = true);
-    printstyled(" is bad "; color = :green, bold = true);
-    println();
-    printstyled("Using Sigmoid function as act_function "; color = :green, bold = true);
+    println("Running 10 epochs ");
+    println("Negative is Good, Positive is Bad");
     println();
 
-    netSigmoid = FFNetwork.train_network_with_MNIST!(;verbose = true);
-
-    # println();
-    # printstyled("Running 10 epochs "; color = :green, bold = true);
-    # printstyled("Blue"; color = :blue, bold = true);
-    # printstyled(" is good "; color = :green, bold = true);
-    # printstyled("Red"; color = :red, bold = true);
-    # printstyled(" is bad "; color = :green, bold = true);
-    # println();
-    printstyled("Using ReLU function as act_function "; color = :green, bold = true);
+    println("Using ReLU function as act_function ");
     println();
     FFNetwork.act_function(z) = FFNetwork.ReLU(z);
     FFNetwork.act_function_prime(z) = FFNetwork.ReLU_prime(z);
+    netReLU = FFNetwork.Network(28*28,16,10);
+    FFNetwork.train!(netReLU, FFNetwork.data.(traindata) , FFNetwork.data.(testdata) , 10 , 20, 3.0; verbose = true);
 
-    netReLU = FFNetwork.train_network_with_MNIST!(;verbose = true);
+    println("Using Sigmoid function as act_function ");
+    println();
+    FFNetwork.act_function(z) = FFNetwork.sigmoid(z);
+    FFNetwork.act_function_prime(z) = FFNetwork.sigmoid_prime(z);
+    netSigmoid = FFNetwork.Network(28*28,16,10);
+    FFNetwork.train!(netSigmoid, FFNetwork.data.(traindata) , FFNetwork.data.(testdata) , 10, 20, 3.0; verbose = true);
+
     sigmoidacc = FFNetwork.evaluate!(netSigmoid, FFNetwork.get_MNIST_img_data());
     ReLUacc = FFNetwork.evaluate!(netReLU, FFNetwork.get_MNIST_img_data());
     println();
 
-    printstyled("Evaluation over whole MNIST data"; color = :blue, bold = true);
-    println();
-    printstyled("Sigmoid accuracy $sigmoidacc"; color = :green, bold = true);
-    println();
-    printstyled("ReLU accuracy $ReLUacc"; color = :green, bold = true);
-    println();
+    println("Evaluation over whole MNIST data");
+    println("Sigmoid accuracy $sigmoidacc");
+    println("ReLU accuracy $ReLUacc");
     println();
 
     @test 1==1;

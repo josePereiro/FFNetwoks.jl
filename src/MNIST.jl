@@ -18,6 +18,7 @@ inlength(img::MNISTImg) = inlength(img.data);
 data(img::MNISTImg) = img.data;
 
 MNIST_img_length = 28*28;
+Labels_length = 10;
 
 labels_tuple = NTuple{10,Vector{Float64}}(
     ([1.,0.,0.,0.,0., 0.,0.,0.,0.,0.],
@@ -48,12 +49,13 @@ function get_MNIST_train_and_test_data()::NTuple{2,Vector{MNISTImg}}
     return (total[1:MNISTLength - 10000], total[MNISTLength - 9999:MNISTLength])
 end
 
-function train_network_with_MNIST!(;net::Network = Network(MNIST_img_length, 16, 16, 10),
+function train_network_with_MNIST!(net::Network;
     epoch = 10, eta = 3.0, mini_batch_size = 20, verbose = false)
+    @assert outlength(net) == Labels_length;
+    @assert inlength(net) == MNIST_img_length;
     loadMNIST();
     traindata, testdata = get_MNIST_train_and_test_data();
     train!(net, data.(traindata) , data.(testdata) , epoch, mini_batch_size, eta; verbose = verbose);
-    return net;
 end
 
 # (net::Network, train_data::Vector{TestDatum},
