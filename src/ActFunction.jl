@@ -28,8 +28,8 @@ function ReLU(z::T)::T where T<:Real
 end
 
 function ReLU_prime(z::T)::T where T<:Real
-    return if z == zero(z)
-        zero(z)
-    else one(z)
+    return if z > zero(z)
+        one(z)
+    else zero(z)
     end;
 end
