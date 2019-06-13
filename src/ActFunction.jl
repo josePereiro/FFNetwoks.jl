@@ -23,13 +23,16 @@ function sigmoid_prime(z::T) where T<:Real
     return exp(-z)/((one(z) + exp(-z))^2);
 end
 
+ReLU_ng = 1;
+
 function ReLU(z::T)::T where T<:Real
-    return max(0,z);
+    return max(ReLU_ng * z, z);
 end
 
 function ReLU_prime(z::T)::T where T<:Real
-    return if z > zero(z)
-        one(z)
-    else zero(z)
-    end;
+    if z < 0
+        return ReLU_ng;
+    else
+        return one(z);
+    end
 end
